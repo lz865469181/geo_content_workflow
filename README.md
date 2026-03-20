@@ -13,21 +13,79 @@ Topic → Mine Questions → Build Clusters → Generate Articles → Publish Ma
 3. **Generate** — Produces 1500-2500 word GEO-optimized articles via Claude API
 4. **Publish** — Outputs Markdown files with YAML frontmatter
 
-## Quick Start
+## Prerequisites
+
+- **Node.js** >= 18.0 ([download](https://nodejs.org/))
+- **npm** >= 9.0 (comes with Node.js)
+- **Anthropic API Key** — get one at [console.anthropic.com](https://console.anthropic.com/)
+
+## Installation
 
 ```bash
-# Install
-cd geo_workflow
+# 1. Clone the repository
+git clone https://github.com/lz865469181/geo_content_workflow.git
+cd geo_content_workflow
+
+# 2. Install dependencies
 npm install
 
-# Set your API key
-export ANTHROPIC_API_KEY=your-key-here
+# 3. Set your Anthropic API key (pick one method)
 
-# Run the pipeline
+# Option A: Export in terminal (temporary, current session only)
+export ANTHROPIC_API_KEY=sk-ant-xxxxx
+
+# Option B: Set as persistent system environment variable (recommended)
+# Windows (PowerShell, persists across reboots):
+[System.Environment]::SetEnvironmentVariable('ANTHROPIC_API_KEY', 'sk-ant-xxxxx', 'User')
+# macOS/Linux:
+echo 'export ANTHROPIC_API_KEY=sk-ant-xxxxx' >> ~/.bashrc && source ~/.bashrc
+
+# 4. (Optional) If using an API proxy, also set:
+export ANTHROPIC_BASE_URL=http://your-proxy-url
+export CLAUDE_MODEL=your-model-id
+```
+
+## Usage
+
+### Full Pipeline (Step by Step)
+
+```bash
+# Step 1: Discover topics — outputs ranked question list
+npx tsx src/index.ts mine "AI note-taking tools"
+
+# Step 2: Build clusters — creates cluster JSON in output/clusters/
+npx tsx src/index.ts cluster "AI note-taking tools"
+
+# Step 3: Generate articles — writes Markdown files to output/articles/
+npx tsx src/index.ts generate output/clusters/ai-note-taking-tools.json
+```
+
+### One-Shot Batch Mode
+
+```bash
+# Generate everything from a config file
+npx tsx src/index.ts batch examples/batch-config.json
+```
+
+### Analyze Existing Article
+
+```bash
+npx tsx src/index.ts optimize output/articles/your-article.md
+```
+
+### Quick Start (Copy & Paste)
+
+```bash
+git clone https://github.com/lz865469181/geo_content_workflow.git
+cd geo_content_workflow
+npm install
+export ANTHROPIC_API_KEY=your-key-here
 npx tsx src/index.ts mine "AI note-taking tools"
 npx tsx src/index.ts cluster "AI note-taking tools"
 npx tsx src/index.ts generate output/clusters/ai-note-taking-tools.json
 ```
+
+> **Note:** A full `generate` run for ~20 articles takes approximately 30-40 minutes due to API rate limiting. Results are cached — re-running skips already-generated articles.
 
 ## Commands
 
