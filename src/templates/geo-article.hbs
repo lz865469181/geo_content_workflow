@@ -1,0 +1,10 @@
+---
+title: "{{title}}"
+date: {{date}}
+cluster: "{{cluster}}"
+type: {{type}}
+targetQuery: "{{targetQuery}}"
+tags: [{{#each tags}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}]
+---
+
+{{{content}}}

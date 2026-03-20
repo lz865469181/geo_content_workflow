@@ -1,0 +1,19 @@
+---
+title: "{{title}}"
+date: {{date}}
+type: comparison
+---
+
+# {{title}}
+
+{{{introduction}}}
+
+## Comparison Table
+
+| Feature | {{#each products}}{{name}}{{#unless @last}} | {{/unless}}{{/each}} |
+|---------|{{#each products}}---{{#unless @last}}|{{/unless}}{{/each}}|
+{{#each features}}
+| {{name}} | {{#each ../products}}{{lookup (lookup ../../scores @index) @../index}}{{#unless @last}} | {{/unless}}{{/each}} |
+{{/each}}
+
+{{{conclusion}}}
