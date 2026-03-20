@@ -62,7 +62,7 @@ export class ContentGenerator {
       ...cluster.supporting.map(s => `Supporting: ${s.title}`),
     ].join('\n');
 
-    const markdown = await this.claude.complete(
+    let markdown = await this.claude.complete(
       PROMPTS.contentGeneration.system,
       [{
         role: 'user',
@@ -75,6 +75,9 @@ export class ContentGenerator {
       }],
       8192,
     );
+
+    // Strip outer markdown fences if Claude wrapped the response
+    markdown = markdown.replace(/^```(?:markdown)?\s*\n/m, '').replace(/\n```\s*$/m, '').trim();
 
     const result: GeneratedArticle = {
       title: article.title,
